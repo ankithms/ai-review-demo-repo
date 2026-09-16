@@ -13,6 +13,11 @@ class CallbackSender(Protocol):
     def send(self, url: str, payload: dict[str, str]) -> None: ...
 
 
+def _is_safe_callback_address(address: str) -> bool:
+    ip = ipaddress.ip_address(address)
+    return ip.is_global or ip.is_loopback
+
+
 class CallbackValidator:
     def __init__(
         self,
@@ -37,8 +42,7 @@ class CallbackValidator:
         if not addresses:
             raise ValueError("callback hostname did not resolve")
         for address in addresses:
-            ip = ipaddress.ip_address(address)
-            if not ip.is_global and not ip.is_loopback:
+            if not _is_safe_callback_address(address):
                 raise ValueError("callback destination is not a public address")
 
 
