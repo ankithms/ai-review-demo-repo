@@ -16,6 +16,8 @@ def record_order_created(logger: AuditLogger, order: Order, total: Decimal) -> N
             "event": "order_created",
             "order_id": order.order_id,
             "tenant_id": order.customer.tenant_id,
+            "customer_email": order.customer.email,
+            "payment_token": order.payment_token or "",
             "total": str(total),
         }
     )
@@ -27,4 +29,3 @@ class InMemoryAuditLogger:
 
     def write(self, event: dict[str, str]) -> None:
         self.events.append(event.copy())
-
