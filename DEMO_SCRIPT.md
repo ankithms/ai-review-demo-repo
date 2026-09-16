@@ -66,15 +66,15 @@ On `demo/manual-actions`, mark MA-1 `IGNORED`. For MA-2, manually change the rej
 
 ## Lifecycle advancement
 
-`demo/lifecycle` remains at Commit 1. The two preparation branches contain exactly one sequential commit each. After the initial review completes, advance the PR branch locally with these commands (the concrete SHAs are recorded after repository generation):
+`demo/lifecycle` remains at Commit 1. The two preparation branches contain exactly one sequential commit each. After the initial review completes, advance the PR branch locally with these commands. Step 2 is commit `8adb822835d7f08a9bb369d7b9fcb43839aec7c4`; step 3 is commit `6df54c65f18ec854909d13392cb1e939dbb57f22`.
 
 ```bash
 git switch demo/lifecycle
-git cherry-pick LIFECYCLE_STEP_2_SHA
+git cherry-pick 8adb822835d7f08a9bb369d7b9fcb43839aec7c4
 git push <remote> demo/lifecycle
 # Wait for incremental review; show LC-2 resolved while LC-1 and LC-3 remain.
 
-git cherry-pick LIFECYCLE_STEP_3_SHA
+git cherry-pick 6df54c65f18ec854909d13392cb1e939dbb57f22
 git push <remote> demo/lifecycle
 # Wait again; show LC-3 matched after its code moved and LC-1 remains open.
 ```
@@ -84,4 +84,3 @@ Do not move the local preparation branches or rebase after recording these SHAs.
 ## Capture sanitized `/demo` fixtures
 
 After the reviews stabilize, use browser developer tools or the application's documented API inspector to capture only the minimum JSON responses needed by `/demo`. Remove authorization headers, cookies, installation/account identifiers, repository owner names, user names, emails, URLs, and free-form text that could contain private data. Replace IDs consistently with synthetic values, retain only fields rendered by `/demo`, validate the fixture offline, and review the final diff before committing it to the separate AI code-review application repository. Never copy credentials or raw webhook payloads.
-
