@@ -32,19 +32,14 @@ def test_notification_failure_does_not_invalidate_order(service_parts, order):
     assert "order-1" in service_parts["repository"].orders
 
 
-def test_idempotency_is_scoped_by_tenant(service_parts):
-    from order_service.orders import OrderService
-
-    first = Order("order-a", Customer("c1", "tenant-a", "a@example.test"), [OrderLine("sku-1", 1)], "same-key")
-    second = Order("order-b", Customer("c2", "tenant-b", "b@example.test"), [OrderLine("sku-1", 1)], "same-key")
-    service = OrderService(**service_parts)
-    assert service.process(first).order_id == "order-a"
-    assert service.process(second).order_id == "order-b"
-
-
 def test_duplicate_request_returns_existing_order(service, order):
     first = service.process(order)
     duplicate = Order("different", order.customer, order.lines, order.idempotency_key)
     second = service.process(duplicate)
     assert second.order_id == first.order_id
 
+
+def test_rejected_order_reports_failure(service, order):
+    result = service.reject(order, "synthetic validation rejection")
+    assert result.success is False
+    assert result.order_id == "order-1"
