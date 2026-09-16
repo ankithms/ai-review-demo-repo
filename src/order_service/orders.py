@@ -44,11 +44,7 @@ class OrderService:
         reservation = self._inventory.reserve(order.order_id, order.lines)
 
         order.status = "confirmed"
-        try:
-            self._repository.save(order)
-        except Exception:
-            self._inventory.release(reservation)
-            raise
+        self._repository.save(order)
 
         notification_warning = send_confirmation(self._notifications, order)
         record_order_created(self._audit, order, order.total)
@@ -70,4 +66,3 @@ class OrderService:
             notification_warning,
             callback_warning,
         )
-

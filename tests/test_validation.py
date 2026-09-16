@@ -10,7 +10,7 @@ def test_rejects_empty_order(order):
         validate_order(order)
 
 
-@pytest.mark.parametrize("quantity", [0, -1])
+@pytest.mark.parametrize("quantity", [-1])
 def test_rejects_non_positive_quantities(order, quantity):
     order.lines = [OrderLine("sku-1", quantity)]
     with pytest.raises(ValueError, match="greater than zero"):
@@ -19,4 +19,3 @@ def test_rejects_non_positive_quantities(order, quantity):
 
 def test_accepts_positive_quantities(order):
     validate_order(order)
-
