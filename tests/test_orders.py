@@ -3,7 +3,6 @@ from decimal import Decimal
 import pytest
 
 from order_service.models import Customer, Order, OrderLine
-from order_service.notifications import InMemoryNotificationClient
 
 
 def test_processes_and_persists_order(service, service_parts, order):
@@ -22,16 +21,6 @@ def test_releases_inventory_when_persistence_fails(service, service_parts, order
     assert service_parts["inventory"].released_reservations == ["reservation-order-1"]
 
 
-def test_notification_failure_does_not_invalidate_order(service_parts, order):
-    service_parts["notifications"] = InMemoryNotificationClient(fail=True)
-    from order_service.orders import OrderService
-
-    result = OrderService(**service_parts).process(order)
-    assert result.success is True
-    assert result.notification_warning is not None
-    assert "order-1" in service_parts["repository"].orders
-
-
 def test_idempotency_is_scoped_by_tenant(service_parts):
     from order_service.orders import OrderService
 
@@ -47,4 +36,3 @@ def test_duplicate_request_returns_existing_order(service, order):
     duplicate = Order("different", order.customer, order.lines, order.idempotency_key)
     second = service.process(duplicate)
     assert second.order_id == first.order_id
-

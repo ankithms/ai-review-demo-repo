@@ -27,4 +27,3 @@ class InMemoryAuditLogger:
 
     def write(self, event: dict[str, str]) -> None:
         self.events.append(event.copy())
-
