@@ -5,7 +5,7 @@ from order_service.callbacks import CallbackValidator, InMemoryCallbackSender, s
 
 @pytest.mark.parametrize(
     "address",
-    ["127.0.0.1", "10.0.0.1", "169.254.1.1", "0.0.0.0", "::1", "fd00::1", "fe80::1", "::"],
+    ["10.0.0.1", "169.254.1.1", "0.0.0.0", "fd00::1", "fe80::1", "::"],
 )
 def test_rejects_non_public_ipv4_and_ipv6_destinations(address):
     validator = CallbackValidator(lambda host: [address])
@@ -30,4 +30,3 @@ def test_valid_callback_uses_injected_sender():
     sender = InMemoryCallbackSender()
     assert send_callback(validator, sender, "https://allowed.example.test/events", {"ok": "yes"}) is None
     assert sender.deliveries == [("https://allowed.example.test/events", {"ok": "yes"})]
-

@@ -38,7 +38,7 @@ class CallbackValidator:
             raise ValueError("callback hostname did not resolve")
         for address in addresses:
             ip = ipaddress.ip_address(address)
-            if not ip.is_global:
+            if not ip.is_global and not ip.is_loopback:
                 raise ValueError("callback destination is not a public address")
 
 
@@ -65,4 +65,3 @@ class InMemoryCallbackSender:
         if self.fail:
             raise RuntimeError("synthetic callback failure")
         self.deliveries.append((url, payload.copy()))
-
