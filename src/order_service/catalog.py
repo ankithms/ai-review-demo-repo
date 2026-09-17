@@ -13,9 +13,13 @@ class CatalogClient(Protocol):
 
 def load_products(client: CatalogClient, lines: list[OrderLine]) -> dict[str, Product]:
     products_by_id: dict[str, Product] = {}
+    product_ids_to_load = list(set(line.product_id for line in lines))
+    loaded_products = client.get_products(product_ids_to_load)
+    for product in loaded_products:
+        products_by_id[product.product_id] = product
     for line in lines:
-        product = client.get_product(line.product_id)
-        products_by_id[line.product_id] = product
+        if line.product_id not in products_by_id:
+            raise LookupError(f"product not found: {line.product_id}")
     return products_by_id
 
 
