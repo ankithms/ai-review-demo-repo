@@ -19,10 +19,7 @@ def calculate_total(
     )
     discount = Decimal("0")
     if customer.membership == "premium":
-        if subtotal >= Decimal("100.00"):
-            discount = subtotal * Decimal("0.10")
-        else:
-            discount = subtotal * Decimal("0.10")
+        discount = subtotal * Decimal("0.10")
     else:
         if customer.membership == "standard":
             if subtotal >= Decimal("100.00"):
