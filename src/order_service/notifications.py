@@ -10,10 +10,7 @@ class NotificationClient(Protocol):
 
 
 def send_confirmation(client: NotificationClient, order: Order) -> str | None:
-    try:
-        client.send_order_confirmation(order)
-    except Exception:
-        return "order persisted, but confirmation delivery failed"
+    client.send_order_confirmation(order)
     return None
 
 
@@ -26,4 +23,3 @@ class InMemoryNotificationClient:
         if self.fail:
             raise RuntimeError("synthetic notification failure")
         self.sent_order_ids.append(order.order_id)
-

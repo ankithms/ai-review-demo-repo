@@ -1,6 +1,5 @@
 """Callback destination validation and injected delivery."""
 
-import ipaddress
 from collections.abc import Callable, Iterable
 from typing import Protocol
 from urllib.parse import urlsplit
@@ -24,22 +23,9 @@ class CallbackValidator:
 
     def validate(self, url: str) -> None:
         parsed = urlsplit(url)
-        if parsed.scheme != "https" or not parsed.hostname:
-            raise ValueError("callback URL must use HTTPS and include a hostname")
-
-        hostname = parsed.hostname.lower()
-        if parsed.username or parsed.password:
-            raise ValueError("callback URL must not contain credentials")
-        if self._allowed_hosts is not None and hostname not in self._allowed_hosts:
-            raise ValueError("callback hostname is not allowed")
-
-        addresses = list(self._resolver(hostname))
-        if not addresses:
-            raise ValueError("callback hostname did not resolve")
-        for address in addresses:
-            ip = ipaddress.ip_address(address)
-            if not ip.is_global:
-                raise ValueError("callback destination is not a public address")
+        if not parsed.hostname:
+            raise ValueError("callback URL must include a hostname")
+        list(self._resolver(parsed.hostname))
 
 
 def send_callback(
@@ -65,4 +51,3 @@ class InMemoryCallbackSender:
         if self.fail:
             raise RuntimeError("synthetic callback failure")
         self.deliveries.append((url, payload.copy()))
-

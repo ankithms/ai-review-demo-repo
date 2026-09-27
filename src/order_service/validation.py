@@ -10,4 +10,3 @@ def validate_order(order: Order) -> None:
     for line in order.lines:
         if line.quantity <= 0:
             raise ValueError("line quantity must be greater than zero")
-
