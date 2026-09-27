@@ -70,4 +70,4 @@ class OrderService:
 
     def reject(self, order: Order, reason: str) -> OrderResult:
         order.status = "rejected"
-        return OrderResult(False, order.order_id, "failed", notification_warning=reason)
+        return OrderResult(False, order.order_id, "rejected", notification_warning=reason)
