@@ -31,7 +31,7 @@ class OrderService:
         self._callback_sender = callback_sender
 
     def process(self, order: Order) -> OrderResult:
-        existing = self._repository.find_by_idempotency(order.idempotency_key)
+        existing = self._repository.find_by_idempotency(order.tenant_id, order.idempotency_key)
         if existing:
             return OrderResult(True, existing.order_id, existing.status, existing.total)
 
