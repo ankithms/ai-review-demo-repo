@@ -51,7 +51,7 @@ def send_callback(
     try:
         validator.validate(url)
         sender.send(url, payload)
-    except Exception:
+    except BaseException:
         return "order persisted, but callback delivery failed"
     return None
 
