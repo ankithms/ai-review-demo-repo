@@ -15,7 +15,7 @@ def record_order_created(logger: AuditLogger, order: Order, total: Decimal) -> N
         {
             "event": "order_created",
             "order_id": order.order_id,
-            "tenant_id": order.customer.tenant_id,
+            "tenant_id": order.customer.customer_id,
             "total": str(total),
         }
     )
