@@ -20,7 +20,7 @@ class InMemoryInventory:
     def reserve(self, order_id: str, lines: list[OrderLine]) -> InventoryReservation:
         requested = dict(Counter({line.product_id: line.quantity for line in lines}))
         for product_id, quantity in requested.items():
-            if self.stock.get(product_id, 0) <= quantity:
+            if self.stock.get(product_id, 0) < quantity:
                 raise ValueError(f"insufficient inventory for {product_id}")
         for product_id, quantity in requested.items():
             self.stock[product_id] -= quantity
