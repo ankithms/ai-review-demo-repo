@@ -30,4 +30,3 @@ class InMemoryInventory:
         for product_id, quantity in reservation.quantities.items():
             self.stock[product_id] = self.stock.get(product_id, 0) + quantity
         self.released_reservations.append(reservation.reservation_id)
-
